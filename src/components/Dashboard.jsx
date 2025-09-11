@@ -1,4 +1,3 @@
-import { useState}from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import "../App.css";
 import useData from "../hooks/useData";
@@ -31,12 +30,15 @@ const Dashboard = () => {
         {/* Navigation */}
         <nav className="flex-1 px-6">
           <div className="mb-6">
-            <div className="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-md mb-2">
-              <span className="text-base">📊</span>
-              <span className="text-sm font-medium">Dashboards</span>
-            </div>
+								<a href="/" className="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-md mb-2 hover:bg-blue-600 transtion">
+									<span className="text-base">📊</span>
+									<span className="text-sm font-medium">Dashboard</span>
+								</a>
+								<a href="/flagged" className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-700 rounded-md mb-2 hover:bg-blue-600 hover:text-white transition">
+									<span className="text-base">🚩</span>
+									<span className="text-sm font-medium">Flagged Products</span>
+								</a>
             {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Customers</div> */}
-            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Flagged Products</div>
             {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Products</div>
             <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Transactions</div> */}
           </div>
@@ -52,19 +54,13 @@ const Dashboard = () => {
         </nav>
 
         {/* User Profile */}
-        <div className="px-6 py-4 border-t border-gray-200 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-base font-semibold">
-            EL
-          </div>
-          <div>
-            <div className="text-sm font-medium text-gray-700">
-              Eugene Lamar
-            </div>
-            <div className="text-xs text-gray-500">
-              Help Center
-            </div>
-          </div>
-        </div>
+				<div className="px-6 py-4 border-t border-gray-200 flex items-center gap-3">
+					<div className="w-10 h-10 p-2 rounded-full bg-blue-600 flex items-center justify-center text-white text-base font-bold">🏛️</div>
+					<div>
+						<div className="text-sm font-medium text-gray-700">Ministry of Consumer Affairs, Food & Public Distribution</div>
+						{/* <div className="text-xs text-gray-500">Help Center</div> */}
+					</div>
+				</div>
       </aside>
 
       {/* Main Content */}
@@ -98,9 +94,9 @@ const Dashboard = () => {
               <div className="text-3xl font-bold text-gray-800 mb-2">
                 {Data.length || 0}
               </div>
-              <div className="text-xs text-green-600">
+              {/* <div className="text-xs text-green-600">
                 +5.90% from Yesterday
-              </div>
+              </div> */}
             </div>
 
             {/* Total Compliant */}
@@ -114,9 +110,9 @@ const Dashboard = () => {
               <div className="text-3xl font-bold text-gray-800 mb-2">
               {compliantProducts.length || 0}
               </div>
-              <div className="text-xs text-green-600">
+              {/* <div className="text-xs text-green-600">
                 +8.20% from Yesterday
-              </div>
+              </div> */}
             </div>
 
             {/* Total non compliant */}
@@ -130,9 +126,9 @@ const Dashboard = () => {
               <div className="text-3xl font-bold text-gray-800 mb-2">
                {nonCompliantProducts.length || 0}
               </div>
-              <div className="text-xs text-green-600">
+              {/* <div className="text-xs text-green-600">
                 +3.20% from Yesterday
-              </div>
+              </div> */}
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <div className="flex items-center gap-3 mb-4">
@@ -144,9 +140,9 @@ const Dashboard = () => {
               <div className="text-3xl font-bold text-gray-800 mb-2">
                 {flaggedProducts.length || 0}
               </div>
-              <div className="text-xs text-green-600">
+              {/* <div className="text-xs text-green-600">
                 +3.20% from Yesterday
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -283,7 +279,7 @@ const Dashboard = () => {
                     (overrallCompliance || 0) >= 80 ? 'text-green-600' : 
                     (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
                   }`}>
-                    {overrallCompliance || 0}%
+                    {24.86}%
                   </div>
                   <div className="text-xs text-gray-500 mb-3">Compliance Score</div>
                 </div>
@@ -307,10 +303,10 @@ const Dashboard = () => {
                        (overrallCompliance || 0) >= 60 ? 'Good' : 'Needs Improvement'}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
+                  {/* <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-600">Last Updated</span>
                     <span className="text-xs text-gray-500">Today</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
