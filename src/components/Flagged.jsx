@@ -1,6 +1,6 @@
 
 import React from "react";
-import useData from "../hooks/useData";
+import { useEffect, useState } from "react";
 import "../App.css";
 
 const propertyLabels = [
@@ -27,16 +27,32 @@ const summaryCards = [
   { key: 'countryOriginMissing', label: 'Country of Origin Missing', color: 'bg-green-50', text: 'text-green-700' },
 ];
 
+
 const Flagged = () => {
-	const {
-		flaggedProducts,
-		manufacturermissing,
-		netquantitymissing,
-		mrpmissing,
-		consumerCareMissing,
-		manufacturerDateMissing,
-		countryOriginMissing
-	} = useData();
+	const [products, setProducts] = useState([]);
+	const [flaggedProducts, setFlaggedProducts] = useState([]);
+	const [manufacturermissing, setManufacturermissing] = useState([]);
+	const [netquantitymissing, setNetquantitymissing] = useState([]);
+	const [mrpmissing, setMrpmissing] = useState([]);
+	const [consumerCareMissing, setConsumerCareMissing] = useState([]);
+	const [manufacturerDateMissing, setManufacturerDateMissing] = useState([]);
+	const [countryOriginMissing, setCountryOriginMissing] = useState([]);
+
+	useEffect(() => {
+		fetch("/src/data/compliance.json")
+			.then((res) => res.json())
+			.then((data) => {
+				setProducts(data);
+				// Flagged: compliant_score >= 50
+				setFlaggedProducts(data.filter((item) => item.compliant_score >= 50));
+				setManufacturermissing(data.filter(item => item.manufacturer_name === false || item.manufacturer_address === false));
+				setNetquantitymissing(data.filter(item => item.net_quantity === false));
+				setMrpmissing(data.filter(item => item.retail_price === false));
+				setConsumerCareMissing(data.filter(item => item.consumer_care_details === false));
+				setManufacturerDateMissing(data.filter(item => item.manufacture_import_date === false));
+				setCountryOriginMissing(data.filter(item => item.country_of_origin === false));
+			});
+	}, []);
 
 	return (
 		<div className="flex h-screen font-sans">
