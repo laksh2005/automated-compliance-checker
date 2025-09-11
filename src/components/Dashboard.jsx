@@ -1,304 +1,407 @@
-import React, { useState, useEffect } from "react";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { CheckCircle, Package, Flag} from "lucide-react";
-import { motion } from "framer-motion";
+import { useState}from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import "../App.css";
+import useData from "../hooks/useData";
+import { m } from "framer-motion";
 
 const Dashboard = () => {
-  const [complianceScore, setComplianceScore] = useState(0);
 
-  const availabilityData = [
-    { name: "Manufacturer Name", value: 43 },
-    { name: "Net Quantity", value: 34 },
-    { name: "Retail Price", value: 6 },
-    { name: "Consumer Care", value: 11 },
-    { name: "Country of Origin", value: 14 },
+  const {Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance}= useData();
+
+  const complianceData = [
+    { category: 'Manufacturer', compliance: manufacturermissing.length ? Math.floor(Math.max(0, 100 - (manufacturermissing.length / Data.length) * 100)) : 50 },
+    { category: 'Net Quantity', compliance: netquantitymissing.length ? Math.floor(Math.max(0, 100 - (netquantitymissing.length / Data.length) * 100)) : 50 },
+    { category: 'MRP', compliance: mrpmissing.length ? Math.floor(Math.max(0, 100 - (mrpmissing.length / Data.length) * 100)) : 50 },
+    { category: 'Consumer Care', compliance: consumerCareMissing.length ? Math.floor(Math.max(0, 100 - (consumerCareMissing.length / Data.length) * 100)) : 50 },
+    { category: 'Manufacture Date', compliance: manufacturerDateMissing.length ? Math.floor(Math.max(0, 100 - (manufacturerDateMissing.length / Data.length) * 100)) : 50 },
+    { category: 'Country Origin', compliance: countryOriginMissing.length ? Math.floor(Math.max(0, 100 - (countryOriginMissing.length / Data.length) * 100)) : 50 },
   ];
-
-  const recentSearches = [
-    {
-      id: 1,
-      name: "Organic Green Tea",
-      netQuantity: "500g",
-      retailPrice: "₹150",
-      manufacturer: "ABC Pvt. Ltd.",
-      importDate: "2024-08-15",
-      countryOfOrigin: "India",
-    },
-    {
-      id: 2,
-      name: "Premium Coffee Beans",
-      netQuantity: "250g",
-      retailPrice: "₹299",
-      manufacturer: "XYZ Foods Ltd.",
-      importDate: "2024-09-01",
-      countryOfOrigin: "Brazil",
-    },
-    {
-      id: 3,
-      name: "Himalayan Pink Salt",
-      netQuantity: "1kg",
-      retailPrice: "₹199",
-      manufacturer: "Pure Salt Co.",
-      importDate: "2024-08-28",
-      countryOfOrigin: "Pakistan",
-    },
-    {
-      id: 4,
-      name: "Basmati Rice Premium",
-      netQuantity: "5kg",
-      retailPrice: "₹599",
-      manufacturer: "Golden Grain Ltd.",
-      importDate: "2024-09-05",
-      countryOfOrigin: "India",
-    },
-    {
-      id: 5,
-      name: "Dark Chocolate Bar",
-      netQuantity: "100g",
-      retailPrice: "₹125",
-      manufacturer: "Choco Delights",
-      importDate: "2024-08-20",
-      countryOfOrigin: "Belgium",
-    },
-  ];
-
-  useEffect(() => {
-    let score = 0;
-    const timer = setInterval(() => {
-      if (score < 28.9) {
-        score += 1;
-        setComplianceScore(score);
-      } else {
-        clearInterval(timer);
-      }
-    }, 30);
-    return () => clearInterval(timer);
-  }, []);
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.3, duration: 0.6, ease: "easeOut" },
-    }),
-  };
 
   return (
-    <div className="h-screen w-screen bg-white p-4 flex flex-col overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="bg-purple-600 text-white p-3 rounded-xl mb-4 shadow-xl"
-      >
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-            <Package className="w-7 h-7" />
-          </div>
-          <h1 className="text-xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text">
-            Automated Compliance Checker for Legal Metrology Declarations
-          </h1>
-        </div>
-      </motion.div>
-
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <motion.div
-          custom={0}
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
-          className="bg-gradient-to-br from-red-300 via-red-200 to-red-100 p-4 rounded-xl shadow-md flex flex-col items-center justify-center hover:scale-102 transition-transform"
-        >
-          <h2 className="text-2xl font-bold text-black mb-4">
-            Compliance Score
+    <div className="flex h-screen font-sans">
+      {/* Sidebar */}
+      <aside className="w-70 bg-gray-50 border-r border-gray-200 py-6 flex flex-col">
+        {/* Logo/Brand */}
+        <div className="px-6 mb-8">
+          <h2 className="m-0 text-lg font-semibold text-gray-600">
+            MAIN NAVIGATION
           </h2>
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-md">
-              <CheckCircle className="w-8 h-8 text-white" />
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-6">
+          <div className="mb-6">
+            <div className="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-md mb-2">
+              <span className="text-base">📊</span>
+              <span className="text-sm font-medium">Dashboards</span>
             </div>
-            <span className="text-5xl font-bold text-gray-800">
-              28.9%
-            </span>
+            {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Customers</div> */}
+            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Flagged Products</div>
+            {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Products</div>
+            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Transactions</div> */}
           </div>
-          <div className="mt-4 bg-white/50 rounded-full h-2 w-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-500 ease-out"
-              style={{ width: `28.9%` }}
-            ></div>
+{/* 
+          <div className="mt-8">
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
+              SEARCH TOOLS
+            </h3>
+            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Goals & Target</div>
+            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Sales Performance</div>
+            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Marketing</div>
+          </div> */}
+        </nav>
+
+        {/* User Profile */}
+        <div className="px-6 py-4 border-t border-gray-200 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-base font-semibold">
+            EL
           </div>
-        </motion.div>
-
-        <motion.div
-          custom={1}
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
-          className="bg-gradient-to-br from-yellow-200 via-amber-100 to-orange-100 p-4 rounded-xl shadow-md hover:scale-102 transition-transform"
-        >
-          <h2 className="text-2xl font-bold text-black mb-4 text-center">
-            Rule Validation
-          </h2>
-          <div className="space-y-3">
-            {[
-              { label: "Name", status: "pass" },
-              { label: "MRP", status: "fail" },
-              { label: "Net Quantity", status: "fail" },
-              { label: "Manufacturer", status: "pass" },
-              { label: "Country of Origin", status: "pass" },
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8 + idx * 0.1 }}
-                className="flex justify-between items-center bg-white/60 p-2 rounded-lg"
-              >
-                <span className="text-gray-700">{item.label}</span>
-                <span
-                  className={`w-3 h-3 rounded-full ${
-                    item.status === "pass"
-                      ? "bg-green-500"
-                      : "bg-red-500"
-                  }`}
-                ></span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div
-          custom={2}
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
-          className="bg-gradient-to-br from-blue-200 via-cyan-100 to-sky-100 p-4 rounded-xl shadow-md hover:scale-102 transition-transform"
-        >
-          <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center">
-            Availability of Parameters
-          </h2>
-          <div className="h-56 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={availabilityData}>
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: 11, fill: "#4b5563", fontWeight: 500 }}
-                  angle={-30}
-                  textAnchor="end"
-                  height={60}
-                />
-                <YAxis 
-                  tick={{ fontSize: 14, fill: "#4b5563" }} 
-                  domain={[0, 100]}
-                  ticks={[0, 25, 50, 75, 100]}
-                  tickFormatter={(value) => `${value}%`}
-                />
-                <Bar
-                  dataKey="value"
-                  fill="url(#blueGradient)"
-                  radius={[6, 6, 0, 0]}
-                />
-                <defs>
-                  <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" />
-                    <stop offset="100%" stopColor="#1e40af" />
-                  </linearGradient>
-                </defs>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </motion.div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
-        <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-gray-100 p-6 rounded-2xl shadow-md w-full max-w-xl flex flex-col justify-between"
-    >
-      {/* Header */}
-      <h2 className="text-2xl font-bold text-black mb-4">
-        Product Listing Review
-      </h2>
-
-      {/* Content */}
-      <div className="flex items-start gap-4">
-        {/* Product Image */}
-        <div className="w-28 h-36 bg-transparent rounded-lg flex items-center justify-center shadow-inner">
-          <img
-            src="https://m.media-amazon.com/images/I/51KvG-bDAdL.jpg" 
-            alt="Organic Green Tea"
-            className="object-contain w-full h-full rounded-md"
-          />
-        </div>
-
-        {/* Product Details */}
-        <div className="flex-1">
-          <h3 className="text-lg font-bold mb-3 text-gray-900">
-            Organic Green Tea
-          </h3>
-          <div className="space-y-1 text-md">
-            <p><span className="font-semibold">Name:</span> Organic Green Tea</p>
-            <p><span className="font-semibold">MRP:</span> ₹150</p>
-            <p><span className="font-semibold">Net Quantity:</span> 500g</p>
-            <p><span className="font-semibold">Manufacturer:</span> ABC Pvt. Ltd.</p>
-            <p><span className="font-semibold">Country of Origin:</span> India</p>
+          <div>
+            <div className="text-sm font-medium text-gray-700">
+              Eugene Lamar
+            </div>
+            <div className="text-xs text-gray-500">
+              Help Center
+            </div>
           </div>
         </div>
-      </div>
+      </aside>
 
-      {/* Action Buttons */}
-      <div className="flex gap-3 mt-5">
-        <button className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 text-sm font-medium">
-          <Flag size={16} /> Flag for Action
-        </button>
-        <button className="flex items-center gap-2 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg px-4 py-2 text-sm font-medium">
-          <CheckCircle size={16} /> Mark as Reviewed
-        </button>
-      </div>
-        </motion.div>
-
-        <motion.div
-          custom={4}
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
-          className="bg-gradient-to-br from-green-200 via-emerald-100 to-teal-100 rounded-xl shadow-md hover:scale-102 transition-transform flex flex-col"
-        >
-          <div className="p-2 bg-gradient-to-r from-green-300/50 to-emerald-300/50 rounded-t-xl">
-            <h2 className="text-base font-bold text-black flex items-center gap-2">
-              <Package className="w-5 h-5" />
-              Recent Searches
-            </h2>
+      {/* Main Content */}
+      <main className="flex-1 bg-gray-50 overflow-auto">
+        {/* Header */}
+        <div className="bg-white px-8 py-6 border-b border-gray-200">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="m-0 text-2xl font-semibold text-gray-800 mb-1">
+                Automated Compliance Checker
+              </h1>
+              <p className="m-0 text-sm text-gray-500">
+               A detailed overview of products
+              </p>
+            </div>
           </div>
-          <div className="overflow-auto flex-1 p-2">
-            <table className="w-full text-md">
-              <thead className="bg-gradient-to-r from-green-200/80 to-emerald-200/80 sticky top-0">
+        </div>
+
+        {/* Content */}
+        <div className="p-8">
+          {/* Top Cards */}
+          <div className="grid grid-cols-4 gap-6 mb-8">
+            {/* Total  */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-base">�</span>
+                </div>
+                <span className="text-lg text-gray-500">Total Products</span>
+              </div>
+              <div className="text-3xl font-bold text-gray-800 mb-2">
+                {Data.length || 0}
+              </div>
+              <div className="text-xs text-green-600">
+                +5.90% from Yesterday
+              </div>
+            </div>
+
+            {/* Total Compliant */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-base">✓</span>
+                </div>
+                <span className="text-lg text-gray-500">Compliant</span>
+              </div>
+              <div className="text-3xl font-bold text-gray-800 mb-2">
+              {compliantProducts.length || 0}
+              </div>
+              <div className="text-xs text-green-600">
+                +8.20% from Yesterday
+              </div>
+            </div>
+
+            {/* Total non compliant */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-base">✗</span>
+                </div>
+                <span className="text-lg text-gray-500">Non Compliant</span>
+              </div>
+              <div className="text-3xl font-bold text-gray-800 mb-2">
+               {nonCompliantProducts.length || 0}
+              </div>
+              <div className="text-xs text-green-600">
+                +3.20% from Yesterday
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-base">🚩</span>
+                </div>
+                <span className="text-lg text-gray-500">Flagged for Checking</span>
+              </div>
+              <div className="text-3xl font-bold text-gray-800 mb-2">
+                {flaggedProducts.length || 0}
+              </div>
+              <div className="text-xs text-green-600">
+                +3.20% from Yesterday
+              </div>
+            </div>
+          </div>
+
+          {/* Charts Section */}
+          <div className="grid grid-cols-3 gap-6 mb-8">
+            {/* Orders Analytics */}
+            <div className="col-span-2 bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="m-0 text-lg font-semibold">Compliance by Category</h3>
+                <div className="flex gap-4 text-xs">
+                  <span className="text-blue-600">● Compliance %</span>
+                </div>
+              </div>
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={complianceData}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis 
+                      dataKey="category" 
+                      tick={{ fontSize: 12, fill: '#6b7280' }}
+                      axisLine={false}
+                      tickLine={false}
+                      angle={-45}
+                      textAnchor="end"
+                      height={60}
+                      interval={0}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 12, fill: '#6b7280' }}
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 100]}
+                      tickFormatter={(value) => `${value}%`}
+                    />
+                    <Tooltip 
+                      formatter={(value) => [`${value}%`, 'Compliance']}
+                      labelStyle={{ color: '#374151' }}
+                      contentStyle={{ 
+                        backgroundColor: 'white', 
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '6px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                      }}
+                    />
+                    <Bar 
+                      dataKey="compliance" 
+                      fill="#3b82f6"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Compliance Meter */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="m-0 text-lg font-semibold">Overall Compliance</h3>
+              </div>
+              
+              {/* Semi-circle gauge */}
+              <div className="flex flex-col items-center">
+                <div className="relative w-32 h-16 mb-4">
+                  <svg width="128" height="64" className="transform rotate-0">
+                    {/* Background arc */}
+                    <path
+                      d="M 20 60 A 44 44 0 0 1 108 60"
+                      fill="none"
+                      stroke="#e5e7eb"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                    />
+                    {/* Dynamic Progress arc */}
+                    <path
+                      d={(() => {
+                        const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
+                        const angle = (percentage / 100) * 180; // 180 degrees for semicircle
+                        const radian = (angle * Math.PI) / 180;
+                        const x = 64 + 44 * Math.cos(Math.PI - radian);
+                        const y = 60 - 44 * Math.sin(Math.PI - radian);
+                        const largeArcFlag = angle > 90 ? 1 : 0;
+                        return `M 20 60 A 44 44 0 ${largeArcFlag} 1 ${x} ${y}`;
+                      })()}
+                      fill="none"
+                      stroke={(() => {
+                        const score = overrallCompliance || 0;
+                        if (score >= 80) return "#10b981"; // Green
+                        if (score >= 60) return "#f59e0b"; // Yellow/Orange
+                        return "#ef4444"; // Red
+                      })()}
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                    />
+                    {/* Dynamic Needle/Tip */}
+                    <line
+                      x1="64"
+                      y1="60"
+                      x2={(() => {
+                        const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
+                        const angle = (percentage / 100) * 180;
+                        const radian = (angle * Math.PI) / 180;
+                        return 64 + 35 * Math.cos(Math.PI - radian);
+                      })()}
+                      y2={(() => {
+                        const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
+                        const angle = (percentage / 100) * 180;
+                        const radian = (angle * Math.PI) / 180;
+                        return 60 - 35 * Math.sin(Math.PI - radian);
+                      })()}
+                      stroke="#374151"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    {/* Center dot */}
+                    <circle
+                      cx="64"
+                      cy="60"
+                      r="3"
+                      fill="#374151"
+                    />
+                  </svg>
+                </div>
+                
+                <div className="text-center">
+                  <div className={`text-2xl font-bold mb-1 ${
+                    (overrallCompliance || 0) >= 80 ? 'text-green-600' : 
+                    (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
+                  }`}>
+                    {overrallCompliance || 0}%
+                  </div>
+                  <div className="text-xs text-gray-500 mb-3">Compliance Score</div>
+                </div>
+                
+                {/* Scale markers */}
+                <div className="flex justify-between w-32 text-xs text-gray-400 mb-2">
+                  <span>0%</span>
+                  <span>50%</span>
+                  <span>100%</span>
+                </div>
+                
+                {/* Status indicators */}
+                <div className="mt-2 space-y-2 w-full">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600">Status</span>
+                    <span className={`text-xs font-medium ${
+                      (overrallCompliance || 0) >= 80 ? 'text-green-600' : 
+                      (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
+                      {(overrallCompliance || 0) >= 80 ? 'Excellent' : 
+                       (overrallCompliance || 0) >= 60 ? 'Good' : 'Needs Improvement'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600">Last Updated</span>
+                    <span className="text-xs text-gray-500">Today</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Products Table */}
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="m-0 text-lg font-semibold">Products</h3>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="Search Product"
+                  className="px-3 py-2 border border-gray-300 rounded text-sm"
+                />
+                <select className="px-3 py-2 border border-gray-300 rounded text-sm">
+                  <option>All Status</option>
+                </select>
+              </div>
+            </div>
+            <table className="w-full border-collapse">
+              <thead className="bg-gray-50">
                 <tr>
-                  {["Name", "Net Qty", "Price", "Manufacturer", "Import Date", "Origin"].map((header, idx) => (
-                    <th key={idx} className="px-2 py-2 text-left font-semibold text-gray-700 uppercase">
-                      {header}
-                    </th>
-                  ))}
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                    <input type="checkbox" />
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                    Product
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                    Price
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                    Net Qty.
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                    Manufacturer
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                    Country of Origin
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-green-200/30">
-                {recentSearches.map((item) => (
-                  <tr key={item.id} className="hover:bg-green-100/50 transition">
-                    <td className="px-2 py-2 font-semibold text-gray-800">{item.name}</td>
-                    <td className="px-2 py-2 text-gray-700">{item.netQuantity}</td>
-                    <td className="px-2 py-2 text-gray-700">{item.retailPrice}</td>
-                    <td className="px-2 py-2 text-gray-700">{item.manufacturer}</td>
-                    <td className="px-2 py-2 text-gray-700">{item.importDate}</td>
-                    <td className="px-2 py-2 text-gray-700">{item.countryOfOrigin}</td>
-                  </tr>
-                ))}
+              <tbody>
+                <tr className="border-b border-gray-200">
+                  <td className="px-6 py-4">
+                    <input type="checkbox" />
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                   Harvest Bread
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    50
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    400g
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    Harvest Pvt. Ltd.
+                  </td>
+                  <td className="px-6 py-4">
+                    India
+                  </td>
+                </tr>
+                <tr className="border-b border-gray-200">
+                  <td className="px-6 py-4">
+                    <input type="checkbox" />
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    Gaming Chair, local pickup only
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    $5.72
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    453
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    $354.00
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-xl text-xs font-medium">
+                      ✓ In Stock
+                    </span>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
