@@ -17,8 +17,26 @@ const propertyLabels = [
 	{ key: "packer_importer_address", label: "Importer Address" },
 ];
 
+
+const summaryCards = [
+  { key: 'manufacturermissing', label: 'Manufacturer Info Missing', color: 'bg-yellow-50', text: 'text-yellow-700' },
+  { key: 'netquantitymissing', label: 'Net Quantity Missing', color: 'bg-orange-50', text: 'text-orange-700' },
+  { key: 'mrpmissing', label: 'MRP Missing', color: 'bg-pink-50', text: 'text-pink-700' },
+  { key: 'consumerCareMissing', label: 'Consumer Care Missing', color: 'bg-purple-50', text: 'text-purple-700' },
+  { key: 'manufacturerDateMissing', label: 'Manufacture Date Missing', color: 'bg-blue-50', text: 'text-blue-700' },
+  { key: 'countryOriginMissing', label: 'Country of Origin Missing', color: 'bg-green-50', text: 'text-green-700' },
+];
+
 const Flagged = () => {
-	const { flaggedProducts } = useData();
+	const {
+		flaggedProducts,
+		manufacturermissing,
+		netquantitymissing,
+		mrpmissing,
+		consumerCareMissing,
+		manufacturerDateMissing,
+		countryOriginMissing
+	} = useData();
 
 	return (
 		<div className="flex h-screen font-sans">
@@ -60,6 +78,16 @@ const Flagged = () => {
 				</div>
 
 				<div className="p-8">
+					{/* Summary Cards */}
+					<div className="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+						{summaryCards.map(card => (
+							<div key={card.key} className={`flex flex-col items-center justify-center p-4 rounded-xl shadow-sm border border-gray-100 ${card.color}`}>
+								<div className={`text-xs font-semibold mb-1 ${card.text}`}>{card.label}</div>
+								<div className={`text-lg font-bold ${card.text}`}>{eval(card.key).length}</div>
+							</div>
+						))}
+					</div>
+
 					<div className="bg-white rounded-2xl shadow-lg overflow-x-auto border border-gray-100">
 						<div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white z-10 rounded-t-2xl">
 							<h3 className="m-0 text-xl font-bold tracking-tight text-gray-700">Flagged Products Table</h3>
