@@ -6,7 +6,7 @@ import { m } from "framer-motion";
 
 const Dashboard = () => {
 
-  const {Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance}= useData();
+  const {Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance, mostcompliant, leastcompliant}= useData();
 
   const complianceData = [
     { category: 'Manufacturer', compliance: manufacturermissing.length ? Math.floor(Math.max(0, 100 - (manufacturermissing.length / Data.length) * 100)) : 50 },
@@ -16,6 +16,8 @@ const Dashboard = () => {
     { category: 'Manufacture Date', compliance: manufacturerDateMissing.length ? Math.floor(Math.max(0, 100 - (manufacturerDateMissing.length / Data.length) * 100)) : 50 },
     { category: 'Country Origin', compliance: countryOriginMissing.length ? Math.floor(Math.max(0, 100 - (countryOriginMissing.length / Data.length) * 100)) : 50 },
   ];
+
+  
 
   return (
     <div className="flex h-screen font-sans">
@@ -312,6 +314,43 @@ const Dashboard = () => {
                     <span className="text-xs text-gray-500">Today</span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-6 mb-8">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="m-0 text-lg font-semibold">Top 5 Most Compliant Brands</h3>
+                <div className="text-xs text-gray-500">Avg score</div>
+              </div>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={mostcompliant} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v)=>`${v}%`} />
+                    <YAxis type="category" dataKey="company" tick={{ fontSize: 12, fill: '#6b7280' }} width={140} />
+                    <Tooltip formatter={(v)=>[`$${v}%`.replace('$',''), 'Avg Compliance']} />
+                    <Bar dataKey="avg" fill="#10b981" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="m-0 text-lg font-semibold">Top 5 Most Non-Compliant Brands</h3>
+                <div className="text-xs text-gray-500">Avg score</div>
+              </div>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={leastcompliant} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v)=>`${v}%`} />
+                    <YAxis type="category" dataKey="company" tick={{ fontSize: 12, fill: '#6b7280' }} width={140} />
+                    <Tooltip formatter={(v)=>[`$${v}%`.replace('$',''), 'Avg Compliance']} />
+                    <Bar dataKey="avg" fill="#ef4444" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>
