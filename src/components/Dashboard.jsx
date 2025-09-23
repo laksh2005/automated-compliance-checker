@@ -2,11 +2,14 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import "../App.css";
 import useData from "../hooks/useData";
 import { m } from "framer-motion";
-
+import { useState } from "react";
 const Dashboard = () => {
 
   const {Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance, mostcompliant, leastcompliant}= useData();
-
+  const [Input,setInput]=useState("")
+  const [products, setProducts]=useState([])
+  // const {loading, setisloading}=useState(false)
+   const [loading, setLoading] = useState(false); // ✅ Added loading state
   const complianceData = [
     { category: 'Manufacturer', compliance: manufacturermissing.length ? Math.floor(Math.max(0, 100 - (manufacturermissing.length / Data.length) * 100)) : 50 },
     { category: 'Net Quantity', compliance: netquantitymissing.length ? Math.floor(Math.max(0, 100 - (netquantitymissing.length / Data.length) * 100)) : 50 },
@@ -16,7 +19,28 @@ const Dashboard = () => {
     { category: 'Country Origin', compliance: countryOriginMissing.length ? Math.floor(Math.max(0, 100 - (countryOriginMissing.length / Data.length) * 100)) : 50 },
   ];
 
-  
+ const handlesubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // ✅ Show loader when fetching
+    try {
+      const response = await fetch("http://127.0.0.1:5000/scrape", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category: Input,
+        }),
+      });
+      const data = await response.json();
+      console.log("Response from Flask:", data);
+      setProducts(data.results_with_data);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false); // ✅ Stop loader after fetch
+    }
+  };
 
   return (
     <div className="flex h-screen font-sans">
@@ -359,81 +383,85 @@ const Dashboard = () => {
                 <input
                   type="text"
                   placeholder="Search Product"
+                  onChange={(e) => setInput(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded text-sm"
                 />
+                <button
+                  className="p-3 border-0 border-black rounded-xl bg-blue-200"
+                  onClick={handlesubmit}
+                  disabled={loading}
+                >
+                  {loading ? "Loading..." : "Search"}
+                </button>
                 <select className="px-3 py-2 border border-gray-300 rounded text-sm">
                   <option>All Status</option>
                 </select>
               </div>
             </div>
-            <table className="w-full border-collapse">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
-                    <input type="checkbox" />
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
-                    Product
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
-                    Price
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
-                    Net Qty.
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
-                    Manufacturer
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
-                    Country of Origin
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-200">
-                  <td className="px-6 py-4">
-                    <input type="checkbox" />
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                   Harvest Bread
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    50
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    400g
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    Harvest Pvt. Ltd.
-                  </td>
-                  <td className="px-6 py-4">
-                    India
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <td className="px-6 py-4">
-                    <input type="checkbox" />
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    Gaming Chair, local pickup only
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    $5.72
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    453
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    $354.00
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-xl text-xs font-medium">
-                      ✓ In Stock
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+            {/* Loader */}
+            {loading && (
+              <div className="flex justify-center items-center h-24">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              </div>  
+            )}
+
+            {!loading && (
+              <table className="w-full border-collapse">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      <input type="checkbox" />
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      Product
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      Price
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      Net Qty.
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      Manufacturer
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      Country of Origin
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="text-center py-4 text-gray-500">
+                        No products found
+                      </td>
+                    </tr>
+                  ) : (
+                    products.map((product, idx) => (
+                      <tr key={idx} className="border-b border-gray-200">
+                        <td className="px-6 py-4">
+                          <input type="checkbox" />
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {product.name || ""}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {product.retail_price || "-"}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {product.net_quantity || "-"}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {product.manufacturer_name || "-"}
+                        </td>
+                        <td className="px-6 py-4">{product.country_of_origin || "-"}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </main>

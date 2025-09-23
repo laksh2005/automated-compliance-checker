@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import "../App.css";
 
 const propertyLabels = [
-	{ key: "Image_URL", label: "Image" },
-	{ key: "extracted_text", label: "Text Extracted" },
+	// { key: "Image_URL", label: "Image" },
+	// { key: "extracted_text", label: "Text Extracted" },
 	{ key: "manufacturer_name", label: "Manufacturer Name" },
 	{ key: "manufacturer_address", label: "Manufacturer Address" },
 	{ key: "net_quantity", label: "Net Quantity" },
