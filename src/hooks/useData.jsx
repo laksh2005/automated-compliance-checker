@@ -21,7 +21,7 @@ const useData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const req = await fetch("/combined.json")
+        const req = await fetch("/final.json")
         const data = await req.json();
         setData(data)
       }

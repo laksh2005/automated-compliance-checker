@@ -3,13 +3,14 @@ import "../App.css";
 import useData from "../hooks/useData";
 import { m } from "framer-motion";
 import { useState } from "react";
+import Map from "./Map";
 const Dashboard = () => {
 
-  const {Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance, mostcompliant, leastcompliant}= useData();
-  const [Input,setInput]=useState("")
-  const [products, setProducts]=useState([])
+  const { Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance, mostcompliant, leastcompliant } = useData();
+  const [Input, setInput] = useState("")
+  const [products, setProducts] = useState([])
   // const {loading, setisloading}=useState(false)
-   const [loading, setLoading] = useState(false); // ✅ Added loading state
+  const [loading, setLoading] = useState(false); // ✅ Added loading state
   const complianceData = [
     { category: 'Manufacturer', compliance: manufacturermissing.length ? Math.floor(Math.max(0, 100 - (manufacturermissing.length / Data.length) * 100)) : 50 },
     { category: 'Net Quantity', compliance: netquantitymissing.length ? Math.floor(Math.max(0, 100 - (netquantitymissing.length / Data.length) * 100)) : 50 },
@@ -19,7 +20,7 @@ const Dashboard = () => {
     { category: 'Country Origin', compliance: countryOriginMissing.length ? Math.floor(Math.max(0, 100 - (countryOriginMissing.length / Data.length) * 100)) : 50 },
   ];
 
- const handlesubmit = async (e) => {
+  const handlesubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // ✅ Show loader when fetching
     try {
@@ -56,19 +57,19 @@ const Dashboard = () => {
         {/* Navigation */}
         <nav className="flex-1 px-6">
           <div className="mb-6">
-								<a href="/" className="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-md mb-2 hover:bg-blue-600 transtion">
-									<span className="text-base">📊</span>
-									<span className="text-sm font-medium">Dashboard</span>
-								</a>
-								<a href="/flagged" className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-700 rounded-md mb-2 hover:bg-blue-600 hover:text-white transition">
-									<span className="text-base">🚩</span>
-									<span className="text-sm font-medium">Flagged Products</span>
-								</a>
+            <a href="/" className="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-md mb-2 hover:bg-blue-600 transtion">
+              <span className="text-base">📊</span>
+              <span className="text-sm font-medium">Dashboard</span>
+            </a>
+            <a href="/flagged" className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-700 rounded-md mb-2 hover:bg-blue-600 hover:text-white transition">
+              <span className="text-base">🚩</span>
+              <span className="text-sm font-medium">Flagged Products</span>
+            </a>
             {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Customers</div> */}
             {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Products</div>
             <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Transactions</div> */}
           </div>
-{/* 
+          {/* 
           <div className="mt-8">
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
               SEARCH TOOLS
@@ -80,13 +81,13 @@ const Dashboard = () => {
         </nav>
 
         {/* User Profile */}
-				<div className="px-6 py-4 border-t border-gray-200 flex items-center gap-3">
-					<div className="w-10 h-10 p-2 rounded-full bg-blue-600 flex items-center justify-center text-white text-base font-bold">🏛️</div>
-					<div>
-						<div className="text-sm font-medium text-gray-700">Ministry of Consumer Affairs, Food & Public Distribution</div>
-						{/* <div className="text-xs text-gray-500">Help Center</div> */}
-					</div>
-				</div>
+        <div className="px-6 py-4 border-t border-gray-200 flex items-center gap-3">
+          <div className="w-10 h-10 p-2 rounded-full bg-blue-600 flex items-center justify-center text-white text-base font-bold">🏛️</div>
+          <div>
+            <div className="text-sm font-medium text-gray-700">Ministry of Consumer Affairs, Food & Public Distribution</div>
+            {/* <div className="text-xs text-gray-500">Help Center</div> */}
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}
@@ -99,7 +100,7 @@ const Dashboard = () => {
                 Automated Compliance Checker
               </h1>
               <p className="m-0 text-sm text-gray-500">
-               A detailed overview of products
+                A detailed overview of products
               </p>
             </div>
           </div>
@@ -134,7 +135,7 @@ const Dashboard = () => {
                 <span className="text-lg text-gray-500">Compliant</span>
               </div>
               <div className="text-3xl font-bold text-gray-800 mb-2">
-              {compliantProducts.length || 0}
+                {compliantProducts.length || 0}
               </div>
               {/* <div className="text-xs text-green-600">
                 +8.20% from Yesterday
@@ -150,7 +151,7 @@ const Dashboard = () => {
                 <span className="text-lg text-gray-500">Non Compliant</span>
               </div>
               <div className="text-3xl font-bold text-gray-800 mb-2">
-               {nonCompliantProducts.length || 0}
+                {nonCompliantProducts.length || 0}
               </div>
               {/* <div className="text-xs text-green-600">
                 +3.20% from Yesterday
@@ -194,8 +195,8 @@ const Dashboard = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis 
-                      dataKey="category" 
+                    <XAxis
+                      dataKey="category"
                       tick={{ fontSize: 12, fill: '#6b7280' }}
                       axisLine={false}
                       tickLine={false}
@@ -204,25 +205,25 @@ const Dashboard = () => {
                       height={60}
                       interval={0}
                     />
-                    <YAxis 
+                    <YAxis
                       tick={{ fontSize: 12, fill: '#6b7280' }}
                       axisLine={false}
                       tickLine={false}
                       domain={[0, 100]}
                       tickFormatter={(value) => `${value}%`}
                     />
-                    <Tooltip 
+                    <Tooltip
                       formatter={(value) => [`${value}%`, 'Compliance']}
                       labelStyle={{ color: '#374151' }}
-                      contentStyle={{ 
-                        backgroundColor: 'white', 
+                      contentStyle={{
+                        backgroundColor: 'white',
                         border: '1px solid #e5e7eb',
                         borderRadius: '6px',
                         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                       }}
                     />
-                    <Bar 
-                      dataKey="compliance" 
+                    <Bar
+                      dataKey="compliance"
                       fill="#3b82f6"
                       radius={[4, 4, 0, 0]}
                     />
@@ -236,7 +237,7 @@ const Dashboard = () => {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="m-0 text-lg font-semibold">Overall Compliance</h3>
               </div>
-              
+
               {/* Semi-circle gauge */}
               <div className="flex flex-col items-center">
                 <div className="relative w-32 h-16 mb-4">
@@ -299,34 +300,32 @@ const Dashboard = () => {
                     />
                   </svg>
                 </div>
-                
+
                 <div className="text-center">
-                  <div className={`text-2xl font-bold mb-1 ${
-                    (overrallCompliance || 0) >= 80 ? 'text-green-600' : 
-                    (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
-                  }`}>
+                  <div className={`text-2xl font-bold mb-1 ${(overrallCompliance || 0) >= 80 ? 'text-green-600' :
+                      (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
                     {24.86}%
                   </div>
                   <div className="text-xs text-gray-500 mb-3">Compliance Score</div>
                 </div>
-                
+
                 {/* Scale markers */}
                 <div className="flex justify-between w-32 text-xs text-gray-400 mb-2">
                   <span>0%</span>
                   <span>50%</span>
                   <span>100%</span>
                 </div>
-                
+
                 {/* Status indicators */}
                 <div className="mt-2 space-y-2 w-full">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-600">Status</span>
-                    <span className={`text-xs font-medium ${
-                      (overrallCompliance || 0) >= 80 ? 'text-green-600' : 
-                      (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
-                    }`}>
-                      {(overrallCompliance || 0) >= 80 ? 'Excellent' : 
-                       (overrallCompliance || 0) >= 60 ? 'Good' : 'Needs Improvement'}
+                    <span className={`text-xs font-medium ${(overrallCompliance || 0) >= 80 ? 'text-green-600' :
+                        (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
+                      }`}>
+                      {(overrallCompliance || 0) >= 80 ? 'Excellent' :
+                        (overrallCompliance || 0) >= 60 ? 'Good' : 'Needs Improvement'}
                     </span>
                   </div>
                   {/* <div className="flex items-center justify-between">
@@ -347,9 +346,9 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={mostcompliant} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v)=>`${v}%`} />
+                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v) => `${v}%`} />
                     <YAxis type="category" dataKey="company" tick={{ fontSize: 12, fill: '#6b7280' }} width={140} />
-                    <Tooltip formatter={(v)=>[`$${v}%`.replace('$',''), 'Avg Compliance']} />
+                    <Tooltip formatter={(v) => [`$${v}%`.replace('$', ''), 'Avg Compliance']} />
                     <Bar dataKey="avg" fill="#10b981" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -365,15 +364,18 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={leastcompliant} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v)=>`${v}%`} />
+                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v) => `${v}%`} />
                     <YAxis type="category" dataKey="company" tick={{ fontSize: 12, fill: '#6b7280' }} width={140} />
-                    <Tooltip formatter={(v)=>[`$${v}%`.replace('$',''), 'Avg Compliance']} />
+                    <Tooltip formatter={(v) => [`$${v}%`.replace('$', ''), 'Avg Compliance']} />
                     <Bar dataKey="avg" fill="#ef4444" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
           </div>
+
+          <Map />
+         
 
           {/* Products Table */}
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -403,7 +405,7 @@ const Dashboard = () => {
             {loading && (
               <div className="flex justify-center items-center h-24">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-              </div>  
+              </div>
             )}
 
             {!loading && (
