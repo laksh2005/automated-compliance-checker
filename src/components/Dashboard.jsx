@@ -132,7 +132,11 @@ const Dashboard = () => {
       });
       const data = await response.json();
       console.log("Response from Flask:", data);
-      setProducts(data);
+      const mergedProducts = data.results_with_data.map((item, idx) => ({
+      ...item,
+      compliant_score: data.results_bool[idx]?.compliant_score || "",
+    }));
+      setProducts(mergedProducts);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -833,24 +837,24 @@ const Dashboard = () => {
                           <input type="checkbox" />
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.results_with_data.name || ""}
+                          {product.name || ""}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.results_with_data.Category || ""}
+                          {product.Category || ""}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.results_with_bool.compliant_score || ""}
+                          {product.compliant_score || ""}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.results_with_data.retail_price || "-"}
+                          {product.retail_price || "-"}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.results_with_data.net_quantity || "-"}
+                          {product.net_quantity || "-"}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.results_with_data.manufacturer_name || "-"}
+                          {product.manufacturer_name || "-"}
                         </td>
-                        <td className="px-6 py-4">{product.results_with_data.country_of_origin || "-"}</td>
+                        <td className="px-6 py-4">{product.country_of_origin || "-"}</td>
                       </tr>
                     ))
                   )}
