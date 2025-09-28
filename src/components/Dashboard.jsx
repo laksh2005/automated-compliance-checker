@@ -810,9 +810,6 @@ const Dashboard = () => {
                       Compliant Score
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
-                      Price
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
                       Net Qty.
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
@@ -826,7 +823,7 @@ const Dashboard = () => {
                 <tbody>
                   {products.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="text-center py-4 text-gray-500">
+                      <td colSpan={6} className="text-center w-full py-4 text-gray-500">
                         No products found
                       </td>
                     </tr>
@@ -845,9 +842,7 @@ const Dashboard = () => {
                         <td className="px-6 py-4 text-sm text-gray-700">
                           {product.compliant_score || ""}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.retail_price || "-"}
-                        </td>
+                        
                         <td className="px-6 py-4 text-sm text-gray-700">
                           {product.net_quantity || "-"}
                         </td>
