@@ -1,7 +1,16 @@
 
 import React from "react";
-import { useEffect, useState } from "react";
 import "../App.css";
+import useData from "../hooks/useData";
+import { 
+  BarChart3, 
+  Flag, 
+  TrendingUp, 
+  FileText, 
+  Download, 
+  Settings, 
+  Building2
+} from "lucide-react";
 
 const propertyLabels = [
 	// { key: "Image_URL", label: "Image" },
@@ -29,55 +38,90 @@ const summaryCards = [
 
 
 const Flagged = () => {
-	const [products, setProducts] = useState([]);
-	const [flaggedProducts, setFlaggedProducts] = useState([]);
-	const [manufacturermissing, setManufacturermissing] = useState([]);
-	const [netquantitymissing, setNetquantitymissing] = useState([]);
-	const [mrpmissing, setMrpmissing] = useState([]);
-	const [consumerCareMissing, setConsumerCareMissing] = useState([]);
-	const [manufacturerDateMissing, setManufacturerDateMissing] = useState([]);
-	const [countryOriginMissing, setCountryOriginMissing] = useState([]);
+	const { Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance, mostcompliant, leastcompliant } = useData();
 
-	useEffect(() => {
-		fetch("/src/data/compliance.json")
-			.then((res) => res.json())
-			.then((data) => {
-				setProducts(data);
-				// Flagged: compliant_score >= 50
-				setFlaggedProducts(data.filter((item) => item.compliant_score >= 50));
-				setManufacturermissing(data.filter(item => item.manufacturer_name === false || item.manufacturer_address === false));
-				setNetquantitymissing(data.filter(item => item.net_quantity === false));
-				setMrpmissing(data.filter(item => item.retail_price === false));
-				setConsumerCareMissing(data.filter(item => item.consumer_care_details === false));
-				setManufacturerDateMissing(data.filter(item => item.manufacture_import_date === false));
-				setCountryOriginMissing(data.filter(item => item.country_of_origin === false));
-			});
-	}, []);
+	// Create a data mapping object to avoid using eval()
+	const dataMap = {
+		manufacturermissing,
+		netquantitymissing,
+		mrpmissing,
+		consumerCareMissing,
+		manufacturerDateMissing,
+		countryOriginMissing
+	};
 
 	return (
 		<div className="flex h-screen font-sans">
 			{/* Sidebar */}
-			<aside className="w-70 bg-gray-50 border-r border-gray-200 py-6 flex flex-col">
-				<div className="px-6 mb-8">
-					<h2 className="m-0 text-lg font-semibold text-gray-600">MAIN NAVIGATION</h2>
+			<aside className="w-64 bg-white border-r border-gray-200 flex flex-col shadow-lg">
+				{/* Logo/Brand */}
+				<div className="p-6 border-b border-gray-100">
+					<div className="flex items-center gap-3 mb-4">
+					<img src="/logo.webp" alt="logo" className="w-10 h-10" />
+						<div>
+							<h2 className="text-lg font-bold text-gray-900">ComplianceAI</h2>
+							<p className="text-xs text-gray-500">Government Dashboard</p>
+						</div>
+					</div>
 				</div>
-				<nav className="flex-1 px-6">
-					<div className="mb-6">
-						<a href="/" className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-700 rounded-md mb-2 hover:bg-blue-600 hover:text-white transition">
-							<span className="text-base">📊</span>
-							<span className="text-sm font-medium">Dashboard</span>
+
+				{/* Navigation */}
+				<nav className="flex-1 p-6">
+					<div className="space-y-2">
+						<a href="/" className="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 font-medium transition-all duration-200">
+							<div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+								<BarChart3 size={16} className="text-gray-600" />
+							</div>
+							<span className="text-sm">Dashboard</span>
 						</a>
-						<div className="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-md mb-2">
-							<span className="text-base">🚩</span>
-							<span className="text-sm font-medium">Flagged Products</span>
+						<a href="/flagged" className="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-lg border border-blue-200 font-medium transition-all duration-200">
+							<div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+								<Flag size={16} className="text-blue-600" />
+							</div>
+							<span className="text-sm">Flagged Products</span>
+						</a>
+						<a href="/analytics" className="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 font-medium transition-all duration-200">
+							<div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+								<TrendingUp size={16} className="text-gray-600" />
+							</div>
+							<span className="text-sm">Analytics</span>
+						</a>
+						<a href="/reports" className="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 font-medium transition-all duration-200">
+							<div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+								<FileText size={16} className="text-gray-600" />
+							</div>
+							<span className="text-sm">Reports</span>
+						</a>
+					</div>
+
+					<div className="mt-8">
+						<h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4 px-4">Tools</h3>
+						<div className="space-y-1">
+							<a href="/export" className="flex items-center gap-3 px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-all duration-200">
+								<Download size={14} className="text-gray-600" />
+								<span className="text-sm">Export Data</span>
+							</a>
+							<a href="/settings" className="flex items-center gap-3 px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-all duration-200">
+								<Settings size={14} className="text-gray-600" />
+								<span className="text-sm">Settings</span>
+							</a>
 						</div>
 					</div>
 				</nav>
-				<div className="px-6 py-4 border-t border-gray-200 flex items-center gap-3">
-					<div className="w-10 h-10 p-2 rounded-full bg-blue-600 flex items-center justify-center text-white text-base font-bold">🏛️</div>
-					<div>
-						<div className="text-sm font-medium text-gray-700">Ministry of Consumer Affairs, Food & Public Distribution</div>
-						{/* <div className="text-xs text-gray-500">Help Center</div> */}
+
+				{/* User Profile */}
+				<div className="p-6 border-t border-gray-100">
+					<div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+						<div className="relative">
+							<div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+								<Building2 size={18} className="text-white" />
+							</div>
+							<div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
+						</div>
+						<div className="flex-1 min-w-0">
+							<div className="text-sm font-semibold text-gray-900 truncate">Palak Bansal</div>
+							<div className="text-xs text-gray-500 truncate">Admin</div>
+						</div>
 					</div>
 				</div>
 			</aside>
@@ -99,7 +143,7 @@ const Flagged = () => {
 						{summaryCards.map(card => (
 							<div key={card.key} className={`flex flex-col items-center justify-center p-4 rounded-xl shadow-sm border border-gray-100 ${card.color}`}>
 								<div className={`text-xs font-semibold mb-1 ${card.text}`}>{card.label}</div>
-								<div className={`text-lg font-bold ${card.text}`}>{eval(card.key).length}</div>
+								<div className={`text-lg font-bold ${card.text}`}>{dataMap[card.key]?.length || 0}</div>
 							</div>
 						))}
 					</div>
@@ -134,7 +178,7 @@ const Flagged = () => {
 											</td>
 											{propertyLabels.map((prop) => (
 												<td key={prop.key} className="px-2 py-3 text-center">
-													{product[prop.key] === true ? (
+													{product[prop.key] !== "False" ? (
 														<span className="inline-block bg-green-50 text-green-700 px-1 py-1 rounded-full text-xs font-bold shadow-sm">✔</span>
 													) : (
 														<span className="inline-block bg-red-50 text-red-600 px-1 py-1 rounded-full text-xs font-bold shadow-sm">✘</span>

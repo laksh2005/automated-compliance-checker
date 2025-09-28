@@ -38,14 +38,14 @@ const useData = () => {
         if (item.compliant_score < 50) return item;
       });
       const flagged = Data.filter((item) => {
-        if (item.compliant_score >= 50) return item;
+        if (item.compliant_score >= 50 && item.compliant_score < 100) return item;
       });
-      const manufacturerMissing = Data.filter(item => item.manufacturer_name === false || item.manufacturer_address === false);
-      const netquantityMissing = Data.filter(item => item.net_quantity === false);
-      const mrpMissing = Data.filter(item => item.retail_price === false);
-      const consumerCareMissing = Data.filter(item => item.consumer_care_details === false);
-      const manufacturerDateMissing = Data.filter(item => item.manufacture_import_date === false);
-      const countryOriginMissing = Data.filter(item => item.country_of_origin === false);
+      const manufacturerMissing = Data.filter(item => item.manufacturer_name === false || item.manufacturer_address === false || item.manufacturer_name==="False");
+      const netquantityMissing = Data.filter(item => item.net_quantity === false || item.net_quantity==="False");
+      const mrpMissing = Data.filter(item => item.retail_price === false || item.retail_price==="False");
+      const consumerCareMissing = Data.filter(item => item.consumer_care_details === false || item.consumer_care_details==="False");
+      const manufacturerDateMissing = Data.filter(item => item.manufacture_import_date === false || item.manufacture_import_date==="False");
+      const countryOriginMissing = Data.filter(item => item.country_of_origin === false || item.country_of_origin==="False");
 
       const totalScore = Data.reduce((sum, item) => sum + item.compliant_score, 0);
       const averageCompliance = Data.length > 0 ? Math.round(totalScore / Data.length) : 0;

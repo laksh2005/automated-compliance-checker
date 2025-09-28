@@ -3,6 +3,20 @@ import "../App.css";
 import useData from "../hooks/useData";
 import { m } from "framer-motion";
 import { useState } from "react";
+import { 
+  BarChart3, 
+  Flag, 
+  TrendingUp, 
+  FileText, 
+  Download, 
+  Settings, 
+  Building2, 
+  Target, 
+  Trophy, 
+  AlertTriangle,
+  Search,
+  Filter
+} from "lucide-react";
 // --- Mock Data Table with Export CSV ---
 const initialMockRows = [
   {
@@ -118,7 +132,7 @@ const Dashboard = () => {
       });
       const data = await response.json();
       console.log("Response from Flask:", data);
-      setProducts(data.results_with_data);
+      setProducts(data);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -129,46 +143,75 @@ const Dashboard = () => {
   return (
     <div className="flex h-screen font-sans">
       {/* Sidebar */}
-      <aside className="w-70 bg-gray-50 border-r border-gray-200 py-6 flex flex-col">
+      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col shadow-lg">
         {/* Logo/Brand */}
-        <div className="px-6 mb-8">
-          <h2 className="m-0 text-lg font-semibold text-gray-600">
-            MAIN NAVIGATION
-          </h2>
+        <div className="p-6 border-b border-gray-100">
+          <div className="flex items-center gap-3 mb-4">
+           <img src="/logo.webp" alt="logo" className="w-10 h-10" />
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">ComplianceAI</h2>
+              <p className="text-xs text-gray-500">Government Dashboard</p>
+            </div>
+          </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-6">
-          <div className="mb-6">
-            <a href="/" className="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-md mb-2 hover:bg-blue-600 transtion">
-              <span className="text-base">📊</span>
-              <span className="text-sm font-medium">Dashboard</span>
+        <nav className="flex-1 p-6">
+          <div className="space-y-2">
+            <a href="/" className="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-lg border border-blue-200 font-medium transition-all duration-200">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                <BarChart3 size={16} className="text-blue-600" />
+              </div>
+              <span className="text-sm">Dashboard</span>
             </a>
-            <a href="/flagged" className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-700 rounded-md mb-2 hover:bg-blue-600 hover:text-white transition">
-              <span className="text-base">🚩</span>
-              <span className="text-sm font-medium">Flagged Products</span>
+            <a href="/flagged" className="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 font-medium transition-all duration-200">
+              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-100">
+                <Flag size={16} className="text-gray-600" />
+              </div>
+              <span className="text-sm">Flagged Products</span>
             </a>
-            {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Customers</div> */}
-            {/* <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Products</div>
-            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Transactions</div> */}
+            <a href="/analytics" className="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 font-medium transition-all duration-200">
+              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                <TrendingUp size={16} className="text-gray-600" />
+              </div>
+              <span className="text-sm">Analytics</span>
+            </a>
+            <a href="/reports" className="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 font-medium transition-all duration-200">
+              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                <FileText size={16} className="text-gray-600" />
+              </div>
+              <span className="text-sm">Reports</span>
+            </a>
           </div>
-          {/* 
+
           <div className="mt-8">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
-              SEARCH TOOLS
-            </h3>
-            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Goals & Target</div>
-            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Sales Performance</div>
-            <div className="text-gray-500 text-sm py-2 px-4 hover:text-gray-700 cursor-pointer">Marketing</div>
-          </div> */}
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4 px-4">Tools</h3>
+            <div className="space-y-1">
+              <a href="/export" className="flex items-center gap-3 px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-all duration-200">
+                <Download size={14} className="text-gray-600" />
+                <span className="text-sm">Export Data</span>
+              </a>
+              <a href="/settings" className="flex items-center gap-3 px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-all duration-200">
+                <Settings size={14} className="text-gray-600" />
+                <span className="text-sm">Settings</span>
+              </a>
+            </div>
+          </div>
         </nav>
 
         {/* User Profile */}
-        <div className="px-6 py-4 border-t border-gray-200 flex items-center gap-3">
-          <div className="w-10 h-10 p-2 rounded-full bg-blue-600 flex items-center justify-center text-white text-base font-bold">🏛️</div>
-          <div>
-            <div className="text-sm font-medium text-gray-700">Ministry of Consumer Affairs, Food & Public Distribution</div>
-            {/* <div className="text-xs text-gray-500">Help Center</div> */}
+        <div className="p-6 border-t border-gray-100">
+          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+            <div className="relative">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Building2 size={18} className="text-white" />
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold text-gray-900 truncate">Palak Bansal</div>
+              <div className="text-xs text-gray-500 truncate">Admin</div>
+            </div>
           </div>
         </div>
       </aside>
@@ -176,139 +219,174 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="flex-1 bg-gray-50 overflow-auto">
         {/* Header */}
-        <div className="bg-white px-8 py-6 border-b border-gray-200">
-          <div className="flex justify-between items-center">
+        <div className="bg-white px-8 py-8 border-b border-gray-200 shadow-sm">
+          <div className="flex justify-between items-start mb-6">
             <div>
-              <h1 className="m-0 text-2xl font-semibold text-gray-800 mb-1">
+              <nav className="flex mb-3" aria-label="Breadcrumb">
+                <ol className="flex items-center space-x-2 text-sm">
+                  <li>
+                    <span className="text-gray-500 hover:text-gray-700 cursor-pointer transition-colors">Dashboard</span>
+                  </li>
+                  <li>
+                    <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </li>
+                  <li>
+                    <span className="text-blue-600 font-medium">Overview</span>
+                  </li>
+                </ol>
+              </nav>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Automated Compliance Checker
               </h1>
-              <p className="m-0 text-sm text-gray-500">
-                A detailed overview of products
+              <p className="text-gray-600 text-base max-w-2xl">
+                Monitor product compliance across categories with comprehensive insights and analytics
               </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => {
+                  // Download compliance report PDF
+                  const link = document.createElement('a');
+                  link.href = '/compliance_report.pdf';
+                  link.download = 'compliance_report.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all duration-200 shadow-sm hover:shadow"
+              >
+                <BarChart3 size={16} className="mr-2 inline-block" />
+                Export Report
+              </button>
+              <button 
+                onClick={() => {
+                  // Download final.json dataset
+                  const link = document.createElement('a');
+                  link.href = '/final.json';
+                  link.download = 'final.json';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-all duration-200 shadow-sm hover:shadow"
+              >
+                <Download size={16} className="mr-2 inline-block" />
+                Export Dataset
+              </button>
+            </div>
+          </div>
+          
+          {/* Quick Stats */}
+          <div className="grid grid-cols-4 gap-6">
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-2xl font-bold text-blue-600">{Data.length || 0}</div>
+              <div className="text-sm text-gray-500">Total Products</div>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-2xl font-bold text-green-600">{compliantProducts.length || 0}</div>
+              <div className="text-sm text-gray-500">Compliant</div>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-2xl font-bold text-red-600">{nonCompliantProducts.length || 0}</div>
+              <div className="text-sm text-gray-500">Non Compliant</div>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-2xl font-bold text-yellow-600">{flaggedProducts.length || 0}</div>
+              <div className="text-sm text-gray-500">Under Review</div>
             </div>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-8">
-          {/* Top Cards */}
-          <div className="grid grid-cols-4 gap-6 mb-8">
-            {/* Total  */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-base">�</span>
-                </div>
-                <span className="text-lg text-gray-500">Total Products</span>
-              </div>
-              <div className="text-3xl font-bold text-gray-800 mb-2">
-                {Data.length || 0}
-              </div>
-              {/* <div className="text-xs text-green-600">
-                +5.90% from Yesterday
-              </div> */}
-            </div>
-
-            {/* Total Compliant */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-base">✓</span>
-                </div>
-                <span className="text-lg text-gray-500">Compliant</span>
-              </div>
-              <div className="text-3xl font-bold text-gray-800 mb-2">
-                {compliantProducts.length || 0}
-              </div>
-              {/* <div className="text-xs text-green-600">
-                +8.20% from Yesterday
-              </div> */}
-            </div>
-
-            {/* Total non compliant */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-base">✗</span>
-                </div>
-                <span className="text-lg text-gray-500">Non Compliant</span>
-              </div>
-              <div className="text-3xl font-bold text-gray-800 mb-2">
-                {nonCompliantProducts.length || 0}
-              </div>
-              {/* <div className="text-xs text-green-600">
-                +3.20% from Yesterday
-              </div> */}
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-base">🚩</span>
-                </div>
-                <span className="text-lg text-gray-500">Flagged for Checking</span>
-              </div>
-              <div className="text-3xl font-bold text-gray-800 mb-2">
-                {flaggedProducts.length || 0}
-              </div>
-              {/* <div className="text-xs text-green-600">
-                +3.20% from Yesterday
-              </div> */}
-            </div>
-          </div>
+          
 
           {/* Charts Section */}
-          <div className="grid grid-cols-3 gap-6 mb-8">
-            {/* Orders Analytics */}
-            <div className="col-span-2 bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="m-0 text-lg font-semibold">Compliance by Category</h3>
-                <div className="flex gap-4 text-xs">
-                  <span className="text-blue-600">● Compliance %</span>
+          <div className="grid grid-cols-3 gap-8 mb-8">
+            {/* Compliance Analytics */}
+            <div className="col-span-2 bg-gradient-to-br from-white to-gray-50/30 p-8 rounded-2xl shadow-lg border border-gray-100/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <div className="flex justify-between items-center mb-8">
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <BarChart3 size={18} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-1">Compliance by Category</h3>
+                      <p className="text-sm text-gray-600">Real-time compliance metrics across product categories</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl shadow-sm">
+                    <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-semibold text-blue-700">Live Data</span>
+                  </div>
+                  <div className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-lg">Last updated: Now</div>
                 </div>
               </div>
-              <div className="h-48">
+              <div className="h-64 relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-xl"></div>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={complianceData}
                     margin={{
-                      top: 20,
-                      right: 30,
+                      top: 30,
+                      right: 40,
                       left: 20,
-                      bottom: 20,
+                      bottom: 60,
                     }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <defs>
+                      <linearGradient id="complianceGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9}/>
+                        <stop offset="100%" stopColor="#1d4ed8" stopOpacity={0.7}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid 
+                      strokeDasharray="4 4" 
+                      stroke="#e2e8f0" 
+                      strokeOpacity={0.6}
+                      vertical={false}
+                    />
                     <XAxis
                       dataKey="category"
-                      tick={{ fontSize: 12, fill: '#6b7280' }}
+                      tick={{ fontSize: 11, fill: '#64748b', fontWeight: 500 }}
                       axisLine={false}
                       tickLine={false}
-                      angle={-45}
+                      angle={-35}
                       textAnchor="end"
-                      height={60}
+                      height={80}
                       interval={0}
                     />
                     <YAxis
-                      tick={{ fontSize: 12, fill: '#6b7280' }}
+                      tick={{ fontSize: 11, fill: '#64748b', fontWeight: 500 }}
                       axisLine={false}
                       tickLine={false}
                       domain={[0, 100]}
                       tickFormatter={(value) => `${value}%`}
+                      width={50}
                     />
                     <Tooltip
-                      formatter={(value) => [`${value}%`, 'Compliance']}
-                      labelStyle={{ color: '#374151' }}
+                      formatter={(value) => [`${value}%`, 'Compliance Rate']}
+                      labelStyle={{ color: '#1f2937', fontWeight: 600, fontSize: '14px' }}
                       contentStyle={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'rgba(255, 255, 255, 0.98)',
                         border: '1px solid #e5e7eb',
-                        borderRadius: '6px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        borderRadius: '12px',
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                        backdropFilter: 'blur(8px)',
+                        fontSize: '13px'
                       }}
+                      cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
                     />
                     <Bar
                       dataKey="compliance"
-                      fill="#3b82f6"
-                      radius={[4, 4, 0, 0]}
+                      fill="url(#complianceGradient)"
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={50}
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -316,141 +394,283 @@ const Dashboard = () => {
             </div>
 
             {/* Compliance Meter */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="m-0 text-lg font-semibold">Overall Compliance</h3>
+            <div className="bg-gradient-to-br from-white via-gray-50/20 to-white p-8 rounded-2xl shadow-lg border border-gray-100/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
+                      <Target size={16} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-1">Overall Compliance</h3>
+                      <p className="text-sm text-gray-600">Real-time performance score</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 rounded-xl shadow-sm">
+                  <div className="w-2 h-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-semibold text-green-700">Live</span>
+                </div>
               </div>
 
-              {/* Semi-circle gauge */}
+              {/* Enhanced Semi-circle gauge */}
               <div className="flex flex-col items-center">
-                <div className="relative w-32 h-16 mb-4">
-                  <svg width="128" height="64" className="transform rotate-0">
-                    {/* Background arc */}
+                <div className="relative w-40 h-20 mb-6">
+                  <svg width="160" height="80" className="transform rotate-0">
+                    {/* Outer glow background */}
+                    <defs>
+                      <filter id="glow">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge> 
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#ef4444" />
+                        <stop offset="50%" stopColor="#f59e0b" />
+                        <stop offset="100%" stopColor="#10b981" />
+                      </linearGradient>
+                    </defs>
+                    
+                    {/* Background track */}
                     <path
-                      d="M 20 60 A 44 44 0 0 1 108 60"
+                      d="M 20 70 A 60 60 0 0 1 140 70"
                       fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="8"
+                      stroke="#f1f5f9"
+                      strokeWidth="12"
                       strokeLinecap="round"
                     />
-                    {/* Dynamic Progress arc */}
+                    
+                    {/* Progress track with gradient */}
                     <path
                       d={(() => {
                         const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
-                        const angle = (percentage / 100) * 180; // 180 degrees for semicircle
+                        const angle = (percentage / 100) * 180;
                         const radian = (angle * Math.PI) / 180;
-                        const x = 64 + 44 * Math.cos(Math.PI - radian);
-                        const y = 60 - 44 * Math.sin(Math.PI - radian);
+                        const x = 80 + 60 * Math.cos(Math.PI - radian);
+                        const y = 70 - 60 * Math.sin(Math.PI - radian);
                         const largeArcFlag = angle > 90 ? 1 : 0;
-                        return `M 20 60 A 44 44 0 ${largeArcFlag} 1 ${x} ${y}`;
+                        return `M 20 70 A 60 60 0 ${largeArcFlag} 1 ${x} ${y}`;
                       })()}
                       fill="none"
                       stroke={(() => {
                         const score = overrallCompliance || 0;
-                        if (score >= 80) return "#10b981"; // Green
-                        if (score >= 60) return "#f59e0b"; // Yellow/Orange
-                        return "#ef4444"; // Red
+                        if (score >= 80) return "#10b981";
+                        if (score >= 60) return "#f59e0b";
+                        return "#ef4444";
                       })()}
-                      strokeWidth="8"
+                      strokeWidth="12"
                       strokeLinecap="round"
+                      filter="url(#glow)"
+                      className="transition-all duration-1000 ease-out"
                     />
-                    {/* Dynamic Needle/Tip */}
-                    <line
-                      x1="64"
-                      y1="60"
-                      x2={(() => {
-                        const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
-                        const angle = (percentage / 100) * 180;
-                        const radian = (angle * Math.PI) / 180;
-                        return 64 + 35 * Math.cos(Math.PI - radian);
-                      })()}
-                      y2={(() => {
-                        const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
-                        const angle = (percentage / 100) * 180;
-                        const radian = (angle * Math.PI) / 180;
-                        return 60 - 35 * Math.sin(Math.PI - radian);
-                      })()}
-                      stroke="#374151"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    {/* Center dot */}
-                    <circle
-                      cx="64"
-                      cy="60"
-                      r="3"
-                      fill="#374151"
-                    />
+                    
+                    {/* Needle with enhanced styling */}
+                    <g className="transition-all duration-1000 ease-out">
+                      <line
+                        x1="80"
+                        y1="70"
+                        x2={(() => {
+                          const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
+                          const angle = (percentage / 100) * 180;
+                          const radian = (angle * Math.PI) / 180;
+                          return 80 + 45 * Math.cos(Math.PI - radian);
+                        })()}
+                        y2={(() => {
+                          const percentage = Math.max(0, Math.min(100, overrallCompliance || 0));
+                          const angle = (percentage / 100) * 180;
+                          const radian = (angle * Math.PI) / 180;
+                          return 70 - 45 * Math.sin(Math.PI - radian);
+                        })()}
+                        stroke="#1f2937"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      />
+                      <circle
+                        cx="80"
+                        cy="70"
+                        r="4"
+                        fill="#1f2937"
+                        className="drop-shadow-sm"
+                      />
+                    </g>
                   </svg>
                 </div>
 
-                <div className="text-center">
-                  <div className={`text-2xl font-bold mb-1 ${(overrallCompliance || 0) >= 80 ? 'text-green-600' :
-                      (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
-                    }`}>
+                <div className="text-center mb-4">
+                  <div className={`text-3xl font-bold mb-2 bg-gradient-to-r ${(overrallCompliance || 0) >= 80 ? 'from-green-600 to-emerald-600' :
+                      (overrallCompliance || 0) >= 60 ? 'from-yellow-600 to-orange-600' : 'from-red-600 to-rose-600'
+                    } bg-clip-text text-transparent`}>
                     {33.72}%
                   </div>
-                  <div className="text-xs text-gray-500 mb-3">Compliance Score</div>
+                  <div className="text-xs text-gray-500 mb-4 font-medium">Compliance Score</div>
                 </div>
 
-                {/* Scale markers */}
-                <div className="flex justify-between w-32 text-xs text-gray-400 mb-2">
-                  <span>0%</span>
-                  <span>50%</span>
-                  <span>100%</span>
+                {/* Enhanced Scale markers */}
+                <div className="flex justify-between w-40 text-xs text-gray-400 mb-4 font-medium">
+                  <span className="text-red-500">0%</span>
+                  <span className="text-yellow-500">50%</span>
+                  <span className="text-green-500">100%</span>
                 </div>
 
-                {/* Status indicators */}
-                <div className="mt-2 space-y-2 w-full">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-600">Status</span>
-                    <span className={`text-xs font-medium ${(overrallCompliance || 0) >= 80 ? 'text-green-600' :
-                        (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
+                {/* Enhanced Status indicators */}
+                <div className="mt-2 space-y-3 w-full">
+                  <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100/50">
+                    <span className="text-sm text-gray-600 font-medium">Status</span>
+                    <span className={`text-sm font-semibold px-3 py-1 rounded-lg ${(overrallCompliance || 0) >= 80 ? 'text-green-700 bg-green-100/70' :
+                        (overrallCompliance || 0) >= 60 ? 'text-yellow-700 bg-yellow-100/70' : 'text-red-700 bg-red-100/70'
                       }`}>
                       {(overrallCompliance || 0) >= 80 ? 'Excellent' :
                         (overrallCompliance || 0) >= 60 ? 'Good' : 'Needs Improvement'}
                     </span>
                   </div>
-                  {/* <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-600">Last Updated</span>
-                    <span className="text-xs text-gray-500">Today</span>
-                  </div> */}
+                  <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100/50">
+                    <span className="text-sm text-gray-600 font-medium">Products Analyzed</span>
+                    <span className="text-sm text-gray-900 font-semibold">{Data.length || 0}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="m-0 text-lg font-semibold">Top 5 Most Compliant Brands</h3>
-                <div className="text-xs text-gray-500">Avg score</div>
+          <div className="grid grid-cols-2 gap-8 mb-8">
+            <div className="bg-gradient-to-br from-white to-green-50/30 p-8 rounded-2xl shadow-lg border border-gray-100/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Trophy size={20} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-1">Top Compliant Brands</h3>
+                    <p className="text-sm text-gray-600">Brands with highest compliance rates</p>
+                  </div>
+                </div>
+                <div className="text-xs text-green-600 bg-green-100/70 px-3 py-1.5 rounded-lg font-semibold border border-green-200/50">
+                  Avg Score
+                </div>
               </div>
-              <div className="h-64">
+              <div className="h-72 relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 rounded-xl"></div>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={mostcompliant} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v) => `${v}%`} />
-                    <YAxis type="category" dataKey="company" tick={{ fontSize: 12, fill: '#6b7280' }} width={140} />
-                    <Tooltip formatter={(v) => [`$${v}%`.replace('$', ''), 'Avg Compliance']} />
-                    <Bar dataKey="avg" fill="#10b981" radius={[0, 4, 4, 0]} />
+                  <BarChart data={mostcompliant} layout="vertical" margin={{ top: 15, right: 30, left: 50, bottom: 15 }}>
+                    <defs>
+                      <linearGradient id="greenGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#10b981" stopOpacity={0.9}/>
+                        <stop offset="100%" stopColor="#059669" stopOpacity={0.7}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid 
+                      strokeDasharray="4 4" 
+                      stroke="#d1fae5" 
+                      strokeOpacity={0.8}
+                      horizontal={false}
+                    />
+                    <XAxis 
+                      type="number" 
+                      domain={[0, 100]} 
+                      tick={{ fontSize: 11, fill: '#059669', fontWeight: 500 }} 
+                      tickFormatter={(v) => `${v}%`}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis 
+                      type="category" 
+                      dataKey="company" 
+                      tick={{ fontSize: 11, fill: '#374151', fontWeight: 500 }} 
+                      width={160}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip 
+                      formatter={(v) => [`${v}%`, 'Compliance Rate']} 
+                      labelStyle={{ color: '#1f2937', fontWeight: 600, fontSize: '14px' }}
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                        border: '1px solid #d1fae5',
+                        borderRadius: '12px',
+                        boxShadow: '0 20px 25px -5px rgba(16, 185, 129, 0.1), 0 10px 10px -5px rgba(16, 185, 129, 0.04)',
+                        backdropFilter: 'blur(8px)',
+                        fontSize: '13px'
+                      }}
+                      cursor={{ fill: 'rgba(16, 185, 129, 0.05)' }}
+                    />
+                    <Bar 
+                      dataKey="avg" 
+                      fill="url(#greenGradient)" 
+                      radius={[0, 8, 8, 0]}
+                      maxBarSize={35}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="m-0 text-lg font-semibold">Top 5 Most Non-Compliant Brands</h3>
-                <div className="text-xs text-gray-500">Avg score</div>
+            <div className="bg-gradient-to-br from-white to-red-50/30 p-8 rounded-2xl shadow-lg border border-gray-100/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <AlertTriangle size={20} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-1">Least Compliant Brands</h3>
+                    <p className="text-sm text-gray-600">Brands requiring compliance improvement</p>
+                  </div>
+                </div>
+                <div className="text-xs text-red-600 bg-red-100/70 px-3 py-1.5 rounded-lg font-semibold border border-red-200/50">
+                  Avg Score
+                </div>
               </div>
-              <div className="h-64">
+              <div className="h-72 relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-rose-500/5 rounded-xl"></div>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={leastcompliant} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(v) => `${v}%`} />
-                    <YAxis type="category" dataKey="company" tick={{ fontSize: 12, fill: '#6b7280' }} width={140} />
-                    <Tooltip formatter={(v) => [`$${v}%`.replace('$', ''), 'Avg Compliance']} />
-                    <Bar dataKey="avg" fill="#ef4444" radius={[0, 4, 4, 0]} />
+                  <BarChart data={leastcompliant} layout="vertical" margin={{ top: 15, right: 30, left: 50, bottom: 15 }}>
+                    <defs>
+                      <linearGradient id="redGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.9}/>
+                        <stop offset="100%" stopColor="#dc2626" stopOpacity={0.7}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid 
+                      strokeDasharray="4 4" 
+                      stroke="#fecaca" 
+                      strokeOpacity={0.8}
+                      horizontal={false}
+                    />
+                    <XAxis 
+                      type="number" 
+                      domain={[0, 100]} 
+                      tick={{ fontSize: 11, fill: '#dc2626', fontWeight: 500 }} 
+                      tickFormatter={(v) => `${v}%`}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis 
+                      type="category" 
+                      dataKey="company" 
+                      tick={{ fontSize: 11, fill: '#374151', fontWeight: 500 }} 
+                      width={160}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip 
+                      formatter={(v) => [`${v}%`, 'Compliance Rate']} 
+                      labelStyle={{ color: '#1f2937', fontWeight: 600, fontSize: '14px' }}
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                        border: '1px solid #fecaca',
+                        borderRadius: '12px',
+                        boxShadow: '0 20px 25px -5px rgba(239, 68, 68, 0.1), 0 10px 10px -5px rgba(239, 68, 68, 0.04)',
+                        backdropFilter: 'blur(8px)',
+                        fontSize: '13px'
+                      }}
+                      cursor={{ fill: 'rgba(239, 68, 68, 0.05)' }}
+                    />
+                    <Bar 
+                      dataKey="avg" 
+                      fill="url(#redGradient)" 
+                      radius={[0, 8, 8, 0]}
+                      maxBarSize={35}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -461,13 +681,17 @@ const Dashboard = () => {
          
 
           {/* Products Table (Mock, with Export CSV) */}
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
-            <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="m-0 text-lg font-semibold">Products (Mock Data)</h3>
+          {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+            <div className="px-8 py-6 border-b border-gray-200 flex justify-between items-center">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Sample Products</h3>
+                <p className="text-sm text-gray-600">Mock data for demonstration purposes</p>
+              </div>
               <button
                 onClick={handleExportMock}
-                className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
               >
+                <Download size={16} className="mr-2 inline-block" />
                 Export CSV
               </button>
             </div>
@@ -499,30 +723,40 @@ const Dashboard = () => {
                 )}
               </tbody>
             </table>
-          </div>
+          </div> */}
           {/* END Products Table (Mock) */}
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="m-0 text-lg font-semibold">Products</h3>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-8 py-6 border-b border-gray-200 flex justify-between items-center">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Product Search Results</h3>
+                <p className="text-sm text-gray-600">Search and analyze product compliance data</p>
+              </div>
               <div className="flex gap-3">
                 <input
                   type="text"
-                  placeholder="Search Product"
+                  placeholder="Search products..."
                   onChange={(e) => setInput(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded text-sm"
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
                 <button
-                  className="p-3 border-0 border-black rounded-xl bg-blue-200"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
                   onClick={handlesubmit}
                   disabled={loading}
                 >
-                  {loading ? "Loading..." : "Search"}
+                  {loading ? "Searching..." : (
+                    <>
+                      <Search size={16} className="mr-2 inline-block" />
+                      Search
+                    </>
+                  )}
                 </button>
-
-                <select className="px-3 py-2 border border-gray-300 rounded text-sm">
+                <select className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
                   <option>All Status</option>
+                  <option>Compliant</option>
+                  <option>Non-Compliant</option>
+                  <option>Flagged</option>
                 </select>
-                                <button
+                <button
                   onClick={() => {
                     if (products.length === 0) {
                       alert("No data to export. Please search for products first.");
@@ -533,17 +767,18 @@ const Dashboard = () => {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'feasibility-report.csv';
+                    a.download = 'compliance-report.csv';
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                   }}
                   disabled={loading}
-                  className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow"
-              >
-                Export CSV
-              </button>
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
+                >
+                  <Download size={16} className="mr-2 inline-block" />
+                  Export CSV
+                </button>
               </div>
             </div>
 
@@ -563,6 +798,12 @@ const Dashboard = () => {
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
                       Product
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      Category
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
+                      Compliant Score
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">
                       Price
@@ -592,18 +833,24 @@ const Dashboard = () => {
                           <input type="checkbox" />
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.name || ""}
+                          {product.results_with_data.name || ""}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.retail_price || "-"}
+                          {product.results_with_data.Category || ""}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.net_quantity || "-"}
+                          {product.results_with_bool.compliant_score || ""}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {product.manufacturer_name || "-"}
+                          {product.results_with_data.retail_price || "-"}
                         </td>
-                        <td className="px-6 py-4">{product.country_of_origin || "-"}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {product.results_with_data.net_quantity || "-"}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          {product.results_with_data.manufacturer_name || "-"}
+                        </td>
+                        <td className="px-6 py-4">{product.results_with_data.country_of_origin || "-"}</td>
                       </tr>
                     ))
                   )}
