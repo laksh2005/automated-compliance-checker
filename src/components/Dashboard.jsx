@@ -3,12 +3,75 @@ import "../App.css";
 import useData from "../hooks/useData";
 import { m } from "framer-motion";
 import { useState } from "react";
+// --- Mock Data Table with Export CSV ---
+const initialMockRows = [
+  {
+    product: "Mother Dairy Butter",
+    price: "₹250",
+    netQty: "500g",
+    manufacturer: "Mother Dairy",
+    country: "India",
+  },
+  {
+    product: "Amul Cheese Slices",
+    price: "₹320",
+    netQty: "200g",
+    manufacturer: "Amul",
+    country: "India",
+  },
+  {
+    product: "Lurpak Butter",
+    price: "₹450",
+    netQty: "250g",
+    manufacturer: "Arla Foods",
+    country: "Denmark",
+  },
+  {
+    product: "President Salted Butter",
+    price: "₹400",
+    netQty: "200g",
+    manufacturer: "Lactalis",
+    country: "France",
+  },
+  {
+    product: "Britannia Cheese Block",
+    price: "₹280",
+    netQty: "400g",
+    manufacturer: "Britannia",
+    country: "India",
+  },
+];
+
+function arrayToCSV(data) {
+  if (!data.length) return '';
+  const header = Object.keys(data[0]);
+  const escape = (str) => `"${String(str).replace(/"/g, '""')}"`;
+  const rows = data.map(row => header.map(key => escape(row[key] ?? "")).join(","));
+  return [header.join(","), ...rows].join("\r\n");
+}
 import Map from "./Map";
 const Dashboard = () => {
 
   const { Data, flaggedProducts, compliantProducts, nonCompliantProducts, manufacturermissing, netquantitymissing, mrpmissing, consumerCareMissing, manufacturerDateMissing, countryOriginMissing, overrallCompliance, mostcompliant, leastcompliant } = useData();
   const [Input, setInput] = useState("")
-  const [products, setProducts] = useState([])
+  // --- Mock Table State ---
+  const [mockRows, setMockRows] = useState(initialMockRows);
+  const [products, setProducts] = useState([]); // Restore products state for search results
+  // Example: to add a new row and keep only last 5 (not used yet)
+  // const addRow = (newRow) => setMockRows(prev => [newRow, ...prev].slice(0, 5));
+
+  const handleExportMock = () => {
+    const csv = arrayToCSV(mockRows);
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'feasibility-report.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
   // const {loading, setisloading}=useState(false)
   const [loading, setLoading] = useState(false); // ✅ Added loading state
   const complianceData = [
@@ -377,7 +440,47 @@ const Dashboard = () => {
           <Map />
          
 
-          {/* Products Table */}
+          {/* Products Table (Mock, with Export CSV) */}
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+            <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="m-0 text-lg font-semibold">Products (Mock Data)</h3>
+              <button
+                onClick={handleExportMock}
+                className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow"
+              >
+                Export CSV
+              </button>
+            </div>
+            <table className="w-full border-collapse">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">Product</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">Price</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">Net Qty.</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">Manufacturer</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500">Country of Origin</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mockRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="text-center py-6 text-gray-500">No products found</td>
+                  </tr>
+                ) : (
+                  mockRows.map((row, idx) => (
+                    <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm text-gray-700">{row.product}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{row.price}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{row.netQty}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{row.manufacturer}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{row.country}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          {/* END Products Table (Mock) */}
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
               <h3 className="m-0 text-lg font-semibold">Products</h3>
@@ -395,9 +498,38 @@ const Dashboard = () => {
                 >
                   {loading ? "Loading..." : "Search"}
                 </button>
+
                 <select className="px-3 py-2 border border-gray-300 rounded text-sm">
                   <option>All Status</option>
                 </select>
+                                <button
+                  onClick={() => {
+                    if (products.length === 0) {
+                      alert("No data to export. Please search for products first.");
+                      return;
+                    }
+                    const csv = arrayToCSV(products.map(p => ({
+                      product: p.name || "",
+                      price: p.retail_price || "",
+                      netQty: p.net_quantity || "",
+                      manufacturer: p.manufacturer_name || "",
+                      country: p.country_of_origin || ""
+                    })));
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'model-output-report.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                  }}
+                  disabled={loading}
+                  className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow"
+              >
+                Export CSV
+              </button>
               </div>
             </div>
 
