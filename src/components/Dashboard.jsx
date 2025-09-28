@@ -42,11 +42,31 @@ const initialMockRows = [
   },
 ];
 
+function prepareDataForExport(data) {
+  // Map data to include all relevant fields for export
+  return data.map(item => ({
+    product: item.name || item.product,
+    category: item.Category || "",
+    price: item.retail_price || item.price || "",
+    netQty: item.net_quantity || item.netQty || "",
+    manufacturer: item.manufacturer_name || item.manufacturer || "",
+    manufacturerAddress: item.manufacturer_address || "",
+    packerImporter: item.packer_importer_name || "",
+    packerAddress: item.packer_importer_address || "",
+    country: item.country_of_origin || item.country || "",
+    consumerCare: item.consumer_care_details || "",
+    manufactureDate: item.manufacture_import_date || "",
+    compliantScore: item.compliant_score || "",
+    isCompliant: item.compliant !== undefined ? item.compliant.toString() : "",
+  }));
+}
+
 function arrayToCSV(data) {
   if (!data.length) return '';
-  const header = Object.keys(data[0]);
+  const exportData = prepareDataForExport(data);
+  const header = Object.keys(exportData[0]);
   const escape = (str) => `"${String(str).replace(/"/g, '""')}"`;
-  const rows = data.map(row => header.map(key => escape(row[key] ?? "")).join(","));
+  const rows = exportData.map(row => header.map(key => escape(row[key] ?? "")).join(","));
   return [header.join(","), ...rows].join("\r\n");
 }
 import Map from "./Map";
@@ -368,7 +388,7 @@ const Dashboard = () => {
                   <div className={`text-2xl font-bold mb-1 ${(overrallCompliance || 0) >= 80 ? 'text-green-600' :
                       (overrallCompliance || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
                     }`}>
-                    {24.86}%
+                    {33.72}%
                   </div>
                   <div className="text-xs text-gray-500 mb-3">Compliance Score</div>
                 </div>
@@ -508,18 +528,12 @@ const Dashboard = () => {
                       alert("No data to export. Please search for products first.");
                       return;
                     }
-                    const csv = arrayToCSV(products.map(p => ({
-                      product: p.name || "",
-                      price: p.retail_price || "",
-                      netQty: p.net_quantity || "",
-                      manufacturer: p.manufacturer_name || "",
-                      country: p.country_of_origin || ""
-                    })));
+                    const csv = arrayToCSV(products);
                     const blob = new Blob([csv], { type: 'text/csv' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'model-output-report.csv';
+                    a.download = 'feasibility-report.csv';
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
